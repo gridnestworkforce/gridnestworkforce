@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Send, CheckCircle } from 'lucide-react';
-
+import { supabase } from '@/lib/supabaseClient';
 export function ContactForm() {
   const [formData, setFormData] = useState({
     name: '',
@@ -21,21 +21,28 @@ export function ContactForm() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  e.preventDefault();
+  setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    
-    // Reset form after success
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setFormData({ name: '', email: '', phone: '', message: '' });
-    }, 3000);
-  };
+  const { data, error } = await supabase
+    .from('contacts') 
+    .insert([formData]);
+
+  setIsSubmitting(false);
+
+  if (error) {
+    console.error('Supabase insert error:', error.message);
+    return;
+  }
+
+  setIsSubmitted(true);
+
+  setTimeout(() => {
+    setIsSubmitted(false);
+    setFormData({ name: '', email: '', phone: '', message: '' });
+  }, 3000);
+};
+
 
   if (isSubmitted) {
     return (
