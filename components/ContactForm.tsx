@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Send, CheckCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
+
 export function ContactForm() {
   const [formData, setFormData] = useState({
     name: '',
@@ -12,6 +13,7 @@ export function ContactForm() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -21,28 +23,43 @@ export function ContactForm() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setIsSubmitting(true);
+    e.preventDefault();
+    setIsSubmitting(true);
+    setErrorMessage('');
 
-  const { data, error } = await supabase
-    .from('contacts') 
-    .insert([formData]);
+    const { data, error } = await supabase.from('contacts').insert([formData]);
 
-  setIsSubmitting(false);
+    if (error) {
+      console.error('Supabase insert error:', error.message);
+      setErrorMessage('Something went wrong. Please try again.');
+      setIsSubmitting(false);
+      return;
+    }
 
-  if (error) {
-    console.error('Supabase insert error:', error.message);
-    return;
-  }
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
 
-  setIsSubmitted(true);
+      const result = await response.json();
+      if (!result.success) {
+        setErrorMessage('Message saved, but email failed to send.');
+      }
+    } catch (err) {
+      console.error('Email send error:', err);
+      setErrorMessage('Failed to send email. Please try again.');
+    }
 
-  setTimeout(() => {
-    setIsSubmitted(false);
+    setIsSubmitting(false);
+    setIsSubmitted(true);
     setFormData({ name: '', email: '', phone: '', message: '' });
-  }, 3000);
-};
 
+    setTimeout(() => {
+      setIsSubmitted(false);
+    }, 3000);
+  };
 
   if (isSubmitted) {
     return (
@@ -64,6 +81,8 @@ export function ContactForm() {
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
+
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
             Full Name *
