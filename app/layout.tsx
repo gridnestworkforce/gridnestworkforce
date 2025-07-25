@@ -9,8 +9,8 @@ export const metadata: Metadata = {
   description: 'GridNest Workforce is India’s trusted partner for verified manpower supply, CX support, and operational staffing across logistics, food tech, and retail. Fast deployment, shift flexibility, and scalable solutions.',
   keywords: 'workforce solutions, gridnestworkforce, manpower supply, staffing services, CX support, operational staffing, India',
   metadataBase: new URL("https://gridnestworkforce.in"),
-  icons:{
-    icon:'./../assets/gnw_logo.png'
+  icons: {
+    icon: './../assets/gnw_logo.png',
   },
   openGraph: {
     title: 'GridNest Workforce - Powering Teams. Structuring Growth.',
@@ -26,8 +26,14 @@ export const metadata: Metadata = {
     description: 'Structured Manpower. Fast Deployment. Trusted Nationwide.',
   },
   robots: 'index, follow',
-  viewport: 'width=device-width, initial-scale=1',
 };
+
+// ✅ Move viewport to its own export
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
+
 export default function RootLayout({
   children,
 }: {
