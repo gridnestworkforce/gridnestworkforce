@@ -24,6 +24,7 @@ export function Navigation() {
     { href: '/about', label: 'About' },
     { href: '/services', label: 'Services' },
     { href: '/contact', label: 'Contact' },
+    { href: '/jobs', label: 'Jobs' }
   ];
 
   return (
@@ -62,7 +63,7 @@ export function Navigation() {
           <button
             className="md:hidden p-2"
             onClick={() => setIsOpen(!isOpen)}
-          >
+          name='menu' >
             {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
@@ -93,6 +94,7 @@ export function Navigation() {
             >
               Get Started
             </Link>
+            
           </div>
         </div>
       )}
