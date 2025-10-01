@@ -43,7 +43,6 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ jobTitle }) => {
     }
 
     try {
-      // Prepare FormData for multipart/form-data
       const formData = new FormData();
       formData.append('name', applicationData.name);
       formData.append('email', applicationData.email);
@@ -52,19 +51,15 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ jobTitle }) => {
       formData.append('coverLetter', applicationData.coverLetter);
       formData.append('resume', applicationData.resume);
 
-      // Send to API route
       const res = await fetch('/api/apply', {
         method: 'POST',
         body: formData,
       });
 
-      if (!res.ok) {
-        throw new Error('Failed to submit application');
-      }
+      if (!res.ok) throw new Error('Failed to submit application');
 
       toast.success('Application submitted! Confirmation email sent.');
 
-      // Reset form
       setApplicationData({
         name: '',
         email: '',
@@ -74,8 +69,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ jobTitle }) => {
         resume: null,
       });
       if (fileInputRef.current) fileInputRef.current.value = '';
-
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
       toast.error('Something went wrong. Please try again.');
     } finally {
@@ -84,12 +78,15 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ jobTitle }) => {
   };
 
   return (
-    <div className="border-t border-gray-200 bg-gradient-to-br from-blue-50 to-indigo-100 p-8 mt-6 rounded-xl">
+    <div className="border-t border-gray-200 bg-gradient-to-br from-blue-50 to-indigo-100 p-6 sm:p-8 mt-6 rounded-xl">
       <Toaster position="top-right" reverseOrder={false} />
-      <h4 className="text-xl font-bold text-gray-900 mb-6">Apply for {jobTitle}</h4>
+      <h4 className="text-lg sm:text-xl font-bold text-gray-900 mb-6">
+        Apply for {jobTitle}
+      </h4>
+
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Name & Email */}
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
             <input
@@ -98,8 +95,8 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ jobTitle }) => {
               required
               value={applicationData.name}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-              placeholder="your name"
+              className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
+              placeholder="Your name"
             />
           </div>
           <div>
@@ -110,14 +107,14 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ jobTitle }) => {
               required
               value={applicationData.email}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
               placeholder="example@email.com"
             />
           </div>
         </div>
 
         {/* Phone & Experience */}
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">Phone Number *</label>
             <input
@@ -126,7 +123,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ jobTitle }) => {
               required
               value={applicationData.phone}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
               placeholder="+91-798..."
             />
           </div>
@@ -136,7 +133,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ jobTitle }) => {
               name="experience"
               value={applicationData.experience}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
             >
               <option value="">Select experience</option>
               <option value="0-1">0-1 years</option>
@@ -157,7 +154,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ jobTitle }) => {
             required
             onChange={handleFileChange}
             accept=".pdf,.doc,.docx"
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
           />
         </div>
 
@@ -170,7 +167,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ jobTitle }) => {
             rows={5}
             value={applicationData.coverLetter}
             onChange={handleInputChange}
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
+            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm sm:text-base"
           />
         </div>
 
@@ -178,7 +175,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ jobTitle }) => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-blue-700 text-white px-8 py-4 rounded-lg hover:bg-blue-800 transition-all font-semibold text-lg flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-blue-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg hover:bg-blue-800 transition-all font-semibold text-base sm:text-lg flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? (
             <>
